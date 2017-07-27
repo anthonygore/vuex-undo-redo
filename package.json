@@ -1,6 +1,6 @@
 {
   "name": "vue-clock-simple",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A Vue.js component that displays a clock",
   "main": "dist/vue-clock.js",
   "scripts": {
