@@ -42,7 +42,7 @@ var config = {
 
 module.exports = [
   merge(config, {
-    entry: path.resolve(__dirname + '/src/window.js'),
+    entry: path.resolve(__dirname + '/src/plugin.js'),
     output: {
       filename: 'vue-clock.min.js',
       libraryTarget: 'window',
