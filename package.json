@@ -1,6 +1,6 @@
 {
   "name": "vue-clock-simple",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Vue.js component that displays a clock",
   "main": "dist/vue-clock.js",
   "scripts": {
@@ -10,6 +10,10 @@
   "license": "MIT",
   "dependencies": {
     "moment": "^2.18.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthonygore/vue-clock-simple"
   },
   "devDependencies": {
     "babel-core": "^6.10.4",
