@@ -24,9 +24,6 @@ module.exports =  {
       }
     ]
   },
-  externals: {
-    moment: 'moment'
-  },
   plugins: [
     new webpack.optimize.UglifyJsPlugin( {
       minimize : true,
