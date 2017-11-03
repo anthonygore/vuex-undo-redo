@@ -1,3 +1,5 @@
+const EMPTY_STATE = 'emptyState';
+
 export default {
   install(Vue) {
     Vue.mixin({
@@ -8,7 +10,11 @@ export default {
         };
       },
       created() {
-        this.$store.subscribe(mutation => this.done.push(mutation));
+        this.$store.subscribe(mutation => {
+          if (mutation.type !== EMPTY_STATE) {
+            this.done.push(mutation);
+          }
+        });
       },
       computed: {
         canRedo() {
@@ -25,9 +31,9 @@ export default {
         },
         undo() {
           this.undone.push(this.done.pop());
-          this.$store.replaceState('emptyState');
-          this.done.forEach(m => {
-            this.$store.commit(`${m.type}`, Object.assign({}, m.payload));
+          this.$store.commit(EMPTY_STATE);
+          this.done.forEach(mutation => {
+            this.$store.commit(`${mutation.type}`, Object.assign({}, mutation.payload));
             this.done.pop();
           });
         }
