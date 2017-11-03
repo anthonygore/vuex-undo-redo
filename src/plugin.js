@@ -1,6 +1,6 @@
 const EMPTY_STATE = 'emptyState';
 
-export default {
+module.exports {
   install(Vue) {
     Vue.mixin({
       data() {
