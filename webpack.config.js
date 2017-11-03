@@ -13,14 +13,6 @@ var config = {
         loader: 'babel',
         include: __dirname,
         exclude: /node_modules/
-      },
-      {
-        test: /\.vue$/,
-        loader: 'vue'
-      },
-      {
-        test: /\.css$/,
-        loader: 'style!less!css'
       }
     ]
   },
@@ -44,17 +36,17 @@ module.exports = [
   merge(config, {
     entry: path.resolve(__dirname + '/src/plugin.js'),
     output: {
-      filename: 'vue-clock.min.js',
+      filename: 'vuex-undo-redo.min.js',
       libraryTarget: 'window',
-      library: 'VueClock',
+      library: 'VuexUndoRedo',
     }
   }),
   merge(config, {
-    entry: path.resolve(__dirname + '/src/Clock.vue'),
+    entry: path.resolve(__dirname + '/src/plugin.js'),
     output: {
-      filename: 'vue-clock.js',
+      filename: 'vuex-undo-redo.js',
       libraryTarget: 'umd',
-      library: 'vue-clock',
+      library: 'vuex-undo-redo',
       umdNamedDefine: true
     }
   })
