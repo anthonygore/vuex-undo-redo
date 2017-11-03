@@ -1,6 +1,6 @@
 {
   "name": "vuex-undo-redo",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "A Vue.js plugin to undo/redo mutations",
   "main": "src/plugin.js",
   "scripts": {
