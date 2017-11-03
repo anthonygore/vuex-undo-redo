@@ -19,7 +19,7 @@ npm i --save-dev vuex-undo-redo
 ### Module
 
 ```js
-import VueClock from 'vue-clock';
+import VuexUndoRedo from 'vuex-undo-redo';
 ```
 
 ## Usage
@@ -38,24 +38,22 @@ new Vuex.Store({
     myVal: null
   },
   mutations: {
-    emptyState(state) {
-      state = {
-        myVal: null
-      }
+    emptyState() {
+      this.replaceState({ myval: null });       
     }
   }
 });
 ```
 
-### API
+## API
 
-Computed properties:
+### Computed properties
 
 `canUndo` a boolean which tells you if the state is undo-able
 
 `canRedo` a boolean which tells you if the state is redo-able
 
-Methods:
+### Methods
 
 `undo` undoes the last mutation
 
