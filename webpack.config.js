@@ -2,17 +2,25 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
 
-var config = {
+module.exports =  {
+  entry: path.resolve(__dirname + '/src/plugin.js'),
   output: {
     path: path.resolve(__dirname + '/dist/'),
+    filename: 'vuex-undo-redo.min.js',
+    libraryTarget: 'window',
+    library: 'VuexUndoRedo',
   },
   module: {
     loaders: [
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: __dirname,
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        options: {
+          presets: ["babel-preset-env"],
+          plugins: ["transform-runtime"],
+        }
       }
     ]
   },
@@ -30,24 +38,3 @@ var config = {
     } )
   ]
 };
-
-
-module.exports = [
-  merge(config, {
-    entry: path.resolve(__dirname + '/src/plugin.js'),
-    output: {
-      filename: 'vuex-undo-redo.min.js',
-      libraryTarget: 'window',
-      library: 'VuexUndoRedo',
-    }
-  }),
-  merge(config, {
-    entry: path.resolve(__dirname + '/src/plugin.js'),
-    output: {
-      filename: 'vuex-undo-redo.js',
-      libraryTarget: 'umd',
-      library: 'vuex-undo-redo',
-      umdNamedDefine: true
-    }
-  })
-];
