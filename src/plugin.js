@@ -6,13 +6,17 @@ module.exports = {
       data() {
         return {
           done: [],
-          undone: []
+          undone: [],
+          newMutation: true
         };
       },
       created() {
         this.$store.subscribe(mutation => {
           if (mutation.type !== EMPTY_STATE) {
             this.done.push(mutation);
+          }
+          if (this.newMutation) {
+            this.undone = [];
           }
         });
       },
@@ -27,15 +31,19 @@ module.exports = {
       methods: {
         redo() {
           let commit = this.undone.pop();
+          this.newMutation = false;
           this.$store.commit(`${commit.type}`, Object.assign({}, commit.payload));
+          this.newMutation = true;
         },
         undo() {
           this.undone.push(this.done.pop());
+          this.newMutation = false;
           this.$store.commit(EMPTY_STATE);
           this.done.forEach(mutation => {
             this.$store.commit(`${mutation.type}`, Object.assign({}, mutation.payload));
             this.done.pop();
           });
+          this.newMutation = true;
         }
       }
     });
