@@ -2,13 +2,13 @@
 
 A Vue.js plugin that allows you to undo or redo a mutation.
 
+> The building of this plugin is documented in the article *[Create A Vuex Undo/Redo For VueJS](https://vuejsdevelopers.com/2017/11/13/vue-js-vuex-undo-redo/)*
+
 ## Live demos
 
 [![Edit Vuex Undo/Redo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vjo3xlpyny)
 
-Check out [this Codepen](https://codepen.io/anthonygore/pen/NwGmqJ) for a live demo. The source code for the demo is [here](https://github.com/anthonygore/vuex-undo-redo-example).
-
-> The building of this plugin is documented in the article *[Create A Vuex Undo/Redo For VueJS](https://vuejsdevelopers.com/2017/11/13/vue-js-vuex-undo-redo/)*
+There's also a demo in [this Codepen](https://codepen.io/anthonygore/pen/NwGmqJ). The source code for the demo is [here](https://github.com/anthonygore/vuex-undo-redo-example).
 
 ## Installation
 
