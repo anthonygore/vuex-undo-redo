@@ -1,18 +1,19 @@
 const EMPTY_STATE = 'emptyState';
 
 module.exports = {
-  install(Vue) {
+  install(Vue, options = {}) {
     Vue.mixin({
       data() {
         return {
           done: [],
           undone: [],
-          newMutation: true
+          newMutation: true,
+          ignoreMutations: options.ignoreMutations|| []
         };
       },
       created() {
         this.$store.subscribe(mutation => {
-          if (mutation.type !== EMPTY_STATE) {
+          if (mutation.type !== EMPTY_STATE && this.ignoreMutations.indexOf(mutation.type) === -1) {
             this.done.push(mutation);
           }
           if (this.newMutation) {

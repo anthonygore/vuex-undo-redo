@@ -51,7 +51,27 @@ new Vuex.Store({
 });
 ```
 
+### Ignoring actions
+
+Occasionally, you may want to perform mutations without including them in the undo history (say you are working on an image editor and the user toggles grid visibility - you probably do not want this in undo history). The plugin has an `ignoredMutations` setting to leave these mutations out of the history:
+
+```js
+Vue.use(VuexUndoRedo, { ignoreMutations: [ 'toggleGrid' ]});
+```
+
+It's worth noting that this only means the mutations will not be recorded in the undo history. You must still manually manage your state object in the `emptyState` mutation:
+
+```js
+emptyState(state) {
+  this.replaceState({ myval: null, showGrid: state.showGrid });       
+}
+```
+
 ## API
+
+### Options
+
+`ignoredMutations` an array of mutations that the plugin will ignore
 
 ### Computed properties
 
