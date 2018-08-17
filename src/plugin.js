@@ -11,7 +11,7 @@ module.exports = {
           ignoreMutations: options.ignoreMutations|| []
         };
       },
-      created() {
+      mounted() {
         this.$store.subscribe(mutation => {
           if (mutation.type !== EMPTY_STATE && this.ignoreMutations.indexOf(mutation.type) === -1) {
             this.done.push(mutation);
