@@ -36,7 +36,7 @@ Since it's a plugin, use it like:
 Vue.use(VuexUndoRedo);
 ```
 
-You must, of course, have a Vuex store installed. This Vuex store must implement a mutation `emptyState` which should revert the store back to the initial state e.g.:
+You must, of course, have the Vuex plugin installed as well, and it must be intalled before this plugin. You must also create a Vuex store which must implement a mutation `emptyState` which should revert the store back to the initial state e.g.:
 
 ```js
 new Vuex.Store({

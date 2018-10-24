@@ -3,7 +3,7 @@ const EMPTY_STATE = 'emptyState';
 module.exports = {
   install(Vue, options = {}) {
     if (!Vue._installedPlugins.find(plugin => plugin.Store)) {
-      throw new Error("VuexUndoRedo plugin must be installed after new Vuex.Store is called.")
+      throw new Error("VuexUndoRedo plugin must be installed after the Vuex plugin.")
     }
     Vue.mixin({
       data() {
@@ -15,14 +15,16 @@ module.exports = {
         };
       },
       created() {
-        this.$store.subscribe(mutation => {
-          if (mutation.type !== EMPTY_STATE && this.ignoreMutations.indexOf(mutation.type) === -1) {
-            this.done.push(mutation);
-          }
-          if (this.newMutation) {
-            this.undone = [];
-          }
-        });
+        if (this.$store) {
+          this.$store.subscribe(mutation => {
+            if (mutation.type !== EMPTY_STATE && this.ignoreMutations.indexOf(mutation.type) === -1) {
+              this.done.push(mutation);
+            }
+            if (this.newMutation) {
+              this.undone = [];
+            }
+          });
+        }
       },
       computed: {
         canRedo() {
