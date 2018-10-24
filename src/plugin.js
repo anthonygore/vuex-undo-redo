@@ -33,7 +33,13 @@ module.exports = {
         redo() {
           let commit = this.undone.pop();
           this.newMutation = false;
-          this.$store.commit(`${commit.type}`, Object.assign({}, commit.payload));
+          switch (typeof commit.payload) {
+            case 'object':
+              this.$store.commit(`${commit.type}`, Object.assign({}, commit.payload));
+              break;
+            default:
+              this.$store.commit(`${commit.type}`, commit.payload);
+          }
           this.newMutation = true;
         },
         undo() {
@@ -41,7 +47,13 @@ module.exports = {
           this.newMutation = false;
           this.$store.commit(EMPTY_STATE);
           this.done.forEach(mutation => {
-            this.$store.commit(`${mutation.type}`, Object.assign({}, mutation.payload));
+            switch (typeof mutation.payload) {
+              case 'object':
+                this.$store.commit(`${mutation.type}`, Object.assign({}, mutation.payload));
+                break
+              default:
+                this.$store.commit(`${mutation.type}`, mutation.payload);
+            }
             this.done.pop();
           });
           this.newMutation = true;
