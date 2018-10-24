@@ -51,7 +51,7 @@ new Vuex.Store({
 });
 ```
 
-### Ignoring actions
+### Ignoring mutations
 
 Occasionally, you may want to perform mutations without including them in the undo history (say you are working on an image editor and the user toggles grid visibility - you probably do not want this in undo history). The plugin has an `ignoredMutations` setting to leave these mutations out of the history:
 
