@@ -15,6 +15,6 @@ describe('plugin', () => {
       localVue.use(Vuex);
       new Vuex.Store({});
       localVue.use(plugin);
-    }).toThrow();
+    }).not.toThrow();
   });
 });

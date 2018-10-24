@@ -2,7 +2,7 @@ const EMPTY_STATE = 'emptyState';
 
 module.exports = {
   install(Vue, options = {}) {
-    if (!Vue.$store) {
+    if (!Vue._installedPlugins.find(plugin => plugin.Store)) {
       throw new Error("VuexUndoRedo plugin must be installed after new Vuex.Store is called.")
     }
     Vue.mixin({
