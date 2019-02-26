@@ -46,9 +46,9 @@ describe('plugin', () => {
         expect(this.$store.state.myVal).toBe(0);
         this.inc();
         expect(this.$store.state.myVal).toBe(1);
-        this.undo();
+        this.$undo();
         expect(this.$store.state.myVal).toBe(0);
-        this.redo();
+        this.$redo();
         expect(this.$store.state.myVal).toBe(1);
         done();
       }
