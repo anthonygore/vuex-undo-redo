@@ -1,10 +1,26 @@
 const EMPTY_STATE = 'emptyState';
+const TAG_UNDO_MUTATION = 'tagUndoMutation';
+
+const VuexUndoRedoModule = {
+  state: {
+    lastUndoRedoTag: null
+  },
+  mutations: {
+    [TAG_UNDO_MUTATION]: (state, tagName) => {
+      state.lastUndoRedoTag = tagName;
+    }
+  }
+}
 
 module.exports = {
   install(Vue, options = {}) {
-    if (!Vue._installedPlugins.find(plugin => plugin.Store)) {
-      throw new Error("VuexUndoRedo plugin must be installed after the Vuex plugin.")
+    if (!options.$store) {
+      throw new Error("A valid store must be passed as a plugin option");
     }
+
+    // Registering local module 
+    options.$store.registerModule('undoRedo', VuexUndoRedoModule);
+
     Vue.mixin({
       data() {
         return {
@@ -50,7 +66,22 @@ module.exports = {
           this.$data.$undoRedo.newMutation = true;
         },
         $undo(tagName) {
+          if (tagName && typeof tagName === 'string') {
+            let candidatesMutations = this.$data.$undoRedo.done.filter(mutation => mutation.type === TAG_UNDO_MUTATION && mutation.payload === tagName);
+            let lastMutation = candidatesMutations.length ? candidatesMutations.pop() : null;
+            if (lastMutation !== null) {
+              let mutationIdx = this.$data.$undoRedo.done.indexOf(lastMutation);
+              let len = this.$data.$undoRedo.done.length;
+              for (let i = len - 1; i > mutationIdx + 1; i--) {
+                this.$data.$undoRedo.undone.push(this.$data.$undoRedo.done.pop());
+              }
+              this.$data.$undoRedo.done.pop(); // Poppin' the TAGGED mutation 
+            }
+          } else {
             this.$data.$undoRedo.undone.push(this.$data.$undoRedo.done.pop());
+          }
+
+          // Replaying mutations
           this.$data.$undoRedo.newMutation = false;
           this.$store.commit(EMPTY_STATE);
           this.$data.$undoRedo.done.forEach(mutation => {
@@ -68,4 +99,5 @@ module.exports = {
       }
     });
   },
+  TAG_UNDO_MUTATION: TAG_UNDO_MUTATION
 }
