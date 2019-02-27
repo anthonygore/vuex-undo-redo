@@ -71,15 +71,15 @@ module.exports = {
         }
       },
       computed: {
-        $canRedo() {
+        canRedo() {
           return this.$data.$undoRedo.undone.length;
         },
-        $canUndo() {
+        canUndo() {
           return this.$data.$undoRedo.done.length;
         }
       },
       methods: {
-        $redo() {
+        redo() {
           let commit = this.$data.$undoRedo.undone.pop();
           this.$data.$undoRedo.newMutation = false;
           switch (typeof commit.payload) {
@@ -91,7 +91,7 @@ module.exports = {
           }
           this.$data.$undoRedo.newMutation = true;
         },
-        $undo(tagName) {
+        undo(tagName) {
           if (tagName && typeof tagName === 'string') {
             let candidatesMutations = this.$data.$undoRedo.done.filter(mutation => mutation.type === TAG_UNDO_MUTATION && mutation.payload === tagName);
             let lastMutation = candidatesMutations.length ? candidatesMutations.pop() : null;

@@ -55,9 +55,9 @@ describe('plugin', () => {
         expect(this.$store.state.myVal).toBe(0);
         this.inc();
         expect(this.$store.state.myVal).toBe(1);
-        this.$undo();
+        this.undo();
         expect(this.$store.state.myVal).toBe(0);
-        this.$redo();
+        this.redo();
         expect(this.$store.state.myVal).toBe(1);
         done();
       }
@@ -105,7 +105,7 @@ describe('plugin', () => {
         this.inc();
         this.inc();
         expect(this.$store.state.myVal).toBe(4);
-        this.$undo('MyTag');
+        this.undo('MyTag');
         expect(this.$store.state.myVal).toBe(2);
         done();
       }
@@ -157,11 +157,11 @@ describe('plugin', () => {
         this.$store.commit(plugin.TAG_UNDO_MUTATION, 'MyTag');
         this.inc();
         expect(this.$store.state.myVal).toBe(5);
-        this.$undo('MyTag');
+        this.undo('MyTag');
         expect(this.$store.state.myVal).toBe(4);
-        this.$undo('MyTag');
+        this.undo('MyTag');
         expect(this.$store.state.myVal).toBe(2);
-        this.$undo('MyTag');
+        this.undo('MyTag');
         expect(this.$store.state.myVal).toBe(0);
         done();
       }
@@ -205,7 +205,7 @@ describe('plugin', () => {
         this.inc();
         this.inc();
         expect(this.$store.state.myVal).toBe(2);
-        this.$undo('MyTag');
+        this.undo('MyTag');
         expect(this.$store.state.myVal).toBe(2);
         done();
       }
@@ -251,7 +251,7 @@ describe('plugin', () => {
         expect(this.$store.state.myVal).toBe(0);
         this.inc();
         expect(this.$store.state.myVal).toBe(1);
-        this.$undo();
+        this.undo();
         expect(this.$store.state.myVal).toBe(0);
         done();
       }

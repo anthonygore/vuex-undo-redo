@@ -125,7 +125,7 @@ emptyState(state) {
 ### Tagging a commit
 
 From version `2.0.0`, you can now undo a set of changes using tags.  
-You first need to tag a version of the store state through the special `VuexUndoRedo.TAG_UNDO_MUTATION` mutation with a given string. Then, you can later call `$undo('MyTag')` to undo the mutations between the `myTag` commit and now.  
+You first need to tag a version of the store state through the special `VuexUndoRedo.TAG_UNDO_MUTATION` mutation with a given string. Then, you can later call `undo('MyTag')` to undo the mutations between the `myTag` commit and now.  
 This is useful for instance if you want to implement a view / edit mode switch: you can tag your state when you enter edit mode, and undo everything from the tag if user hits "Cancel" instead of "Save".
 
 The tagging is done using a simple commit to the store:
@@ -139,7 +139,7 @@ this.$store.commit(TAG_UNDO_MUTATION, 'MyTag');
 And if you want to undo everything done between this commit and the present state, you might just call:
 
 ```js
-this.$undo('MyTag');
+this.undo('MyTag');
 ```
 
 If the same _string_ is used multiple times (say `n`), the plugin will first undo mutations between the last instance (`n`) of this tag and now. The next `undo` called with the same tag _string_ will then cancel then mutations between `n-1` and now, etc.
@@ -154,14 +154,14 @@ If the same _string_ is used multiple times (say `n`), the plugin will first und
 
 ### Computed properties
 
-`$canUndo` a boolean which tells you if the state is undo-able
+`canUndo` a boolean which tells you if the state is undo-able
 
-`$canRedo` a boolean which tells you if the state is redo-able
+`canRedo` a boolean which tells you if the state is redo-able
 
 ### Methods
 
-`$undo` undoes the last mutation
+`undo` undoes the last mutation
 
-`$undo(tagName)` undoes the mutations from the given `tagName`
+`undo(tagName)` undoes the mutations from the given `tagName`
 
-`$redo` redoes the last mutation
+`redo` redoes the last mutation
