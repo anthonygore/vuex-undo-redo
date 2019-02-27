@@ -70,7 +70,7 @@ describe('plugin', () => {
     });
   });
 
-  it('should undo to tagged value data property', done => {
+  it('should undo to tagged value', done => {
 
     const localVue = createLocalVue();
     localVue.use(Vuex);
@@ -121,6 +121,115 @@ describe('plugin', () => {
       localVue,
       store
     });
+  });
 
+  it('should undo to same tagged value multiple times', done => {
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const storeConfig = {
+      state: {
+        myVal: 0
+      },
+      mutations: {
+        inc(state) {
+          state.myVal++;
+        },
+        emptyState() {
+          this.replaceState({
+            myVal: 0,
+            undoRedo: {
+              lastUndoRedoTag: null
+            },
+          });
+        }
+      }
+    };
+    let store = new Vuex.Store(storeConfig);
+    localVue.use(plugin, {
+      $store: store
+    });
+    let component = {
+      template: "<div></div>",
+      methods: {
+        inc() {
+          this.$store.commit("inc");
+        }
+      },
+      created() {
+        expect(this.$store.state.myVal).toBe(0);
+        this.$store.commit(plugin.TAG_UNDO_MUTATION, 'MyTag');
+        this.inc();
+        this.inc();
+        expect(this.$store.state.myVal).toBe(2);
+        this.$store.commit(plugin.TAG_UNDO_MUTATION, 'MyTag');
+        this.inc();
+        this.inc();
+        expect(this.$store.state.myVal).toBe(4);
+        this.$store.commit(plugin.TAG_UNDO_MUTATION, 'MyTag');
+        this.inc();
+        expect(this.$store.state.myVal).toBe(5);
+        this.$undo('MyTag');
+        expect(this.$store.state.myVal).toBe(4);
+        this.$undo('MyTag');
+        expect(this.$store.state.myVal).toBe(2);
+        this.$undo('MyTag');
+        expect(this.$store.state.myVal).toBe(0);
+        done();
+      }
+    };
+    shallowMount(component, {
+      localVue,
+      store
+    });
+  });
+
+  it('should ignore undo if tag not found', done => {
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const storeConfig = {
+      state: {
+        myVal: 0
+      },
+      mutations: {
+        inc(state) {
+          state.myVal++;
+        },
+        emptyState() {
+          this.replaceState({
+            myVal: 0,
+            undoRedo: {
+              lastUndoRedoTag: null
+            },
+          });
+        }
+      }
+    };
+    let store = new Vuex.Store(storeConfig);
+    localVue.use(plugin, {
+      $store: store
+    });
+    let component = {
+      template: "<div></div>",
+      methods: {
+        inc() {
+          this.$store.commit("inc");
+        }
+      },
+      created() {
+        expect(this.$store.state.myVal).toBe(0);
+        this.inc();
+        this.inc();
+        expect(this.$store.state.myVal).toBe(2);
+        this.$undo('MyTag');
+        expect(this.$store.state.myVal).toBe(2);
+        done();
+      }
+    };
+    shallowMount(component, {
+      localVue,
+      store
+    });
   });
 });

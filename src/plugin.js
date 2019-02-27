@@ -72,10 +72,13 @@ module.exports = {
             if (lastMutation !== null) {
               let mutationIdx = this.$data.$undoRedo.done.indexOf(lastMutation);
               let len = this.$data.$undoRedo.done.length;
-              for (let i = len - 1; i > mutationIdx + 1; i--) {
+              for (let i = len - 1; i > mutationIdx; i--) {
                 this.$data.$undoRedo.undone.push(this.$data.$undoRedo.done.pop());
               }
               this.$data.$undoRedo.done.pop(); // Poppin' the TAGGED mutation 
+            } else if (process.env.NODE_ENV !== 'production') {
+              console.warn(`TAG '${tagName}' not found in undo: ignoring...`);
+              return;
             }
           } else {
             this.$data.$undoRedo.undone.push(this.$data.$undoRedo.done.pop());
