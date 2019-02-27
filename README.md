@@ -149,7 +149,7 @@ If the same _string_ is used multiple times (say `n`), the plugin will first und
 ### Options
 
 `$store` (**mandatory**) The newly created store  
-`emptyState` (**mandatory** if you plan on using the Tag feature, _optional_ otherwise) A method or object to handle the empty state.
+`emptyState` (**mandatory** if you plan on using the Tag feature, _optional_ otherwise) A method or object to handle the empty state.  
 `ignoredMutations` (_optional_) An array of mutations that the plugin will ignore
 
 ### Computed properties
