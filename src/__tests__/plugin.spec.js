@@ -34,17 +34,15 @@ describe('plugin', () => {
       mutations: {
         inc(state) {
           state.myVal++;
-        },
-        emptyState() {
-          this.replaceState({
-            myVal: 0
-          });
         }
       }
     };
     let store = new Vuex.Store(storeConfig);
     localVue.use(plugin, {
-      $store: store
+      $store: store,
+      emptyState: {
+        myVal: 0
+      }
     });
     let component = {
       template: "<div></div>",
@@ -81,20 +79,15 @@ describe('plugin', () => {
       mutations: {
         inc(state) {
           state.myVal++;
-        },
-        emptyState() {
-          this.replaceState({
-            myVal: 0,
-            undoRedo: {
-              lastUndoRedoTag: null
-            },
-          });
         }
       }
     };
     let store = new Vuex.Store(storeConfig);
     localVue.use(plugin, {
-      $store: store
+      $store: store,
+      emptyState: {
+        myVal: 0
+      }
     });
     let component = {
       template: "<div></div>",
@@ -134,20 +127,15 @@ describe('plugin', () => {
       mutations: {
         inc(state) {
           state.myVal++;
-        },
-        emptyState() {
-          this.replaceState({
-            myVal: 0,
-            undoRedo: {
-              lastUndoRedoTag: null
-            },
-          });
         }
       }
     };
     let store = new Vuex.Store(storeConfig);
     localVue.use(plugin, {
-      $store: store
+      $store: store,
+      emptyState: {
+        myVal: 0
+      }
     });
     let component = {
       template: "<div></div>",
@@ -195,20 +183,15 @@ describe('plugin', () => {
       mutations: {
         inc(state) {
           state.myVal++;
-        },
-        emptyState() {
-          this.replaceState({
-            myVal: 0,
-            undoRedo: {
-              lastUndoRedoTag: null
-            },
-          });
         }
       }
     };
     let store = new Vuex.Store(storeConfig);
     localVue.use(plugin, {
-      $store: store
+      $store: store,
+      emptyState: {
+        myVal: 0
+      }
     });
     let component = {
       template: "<div></div>",
@@ -224,6 +207,52 @@ describe('plugin', () => {
         expect(this.$store.state.myVal).toBe(2);
         this.$undo('MyTag');
         expect(this.$store.state.myVal).toBe(2);
+        done();
+      }
+    };
+    shallowMount(component, {
+      localVue,
+      store
+    });
+  });
+
+
+  it('should allow passing a function as emptyState option', done => {
+
+    const localVue = createLocalVue();
+    localVue.use(Vuex);
+    const storeConfig = {
+      state: {
+        myVal: 0
+      },
+      mutations: {
+        inc(state) {
+          state.myVal++;
+        }
+      }
+    };
+    let store = new Vuex.Store(storeConfig);
+    localVue.use(plugin, {
+      $store: store,
+      emptyState: (pluginState, store) => {
+        store.replaceState({
+          myVal: 0
+        });
+      }
+    });
+    let component = {
+      template: "<div></div>",
+      methods: {
+        inc() {
+          this.$store.commit("inc");
+        }
+      },
+      created() {
+        expect(this.$store.state.myVal).toBe(0);
+        this.inc();
+        expect(this.$store.state.myVal).toBe(1);
+        this.$undo();
+        expect(this.$store.state.myVal).toBe(0);
         done();
       }
     };

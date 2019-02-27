@@ -12,10 +12,36 @@ const VuexUndoRedoModule = {
   }
 }
 
+const getEmptyStateMutationMethod = (options) => {
+  if (options.emptyState) {
+    switch (typeof options.emptyState) {
+      case 'function':
+        return () => options.emptyState({
+          undoRedo: VuexUndoRedoModule.state
+        }, options.$store);
+      case 'object':
+        {
+          return function () {
+            options.$store.replaceState(Object.assign({}, options.emptyState, {
+              undoRedo: VuexUndoRedoModule.state
+            }));
+          }
+        }
+    }
+  }
+  return null;
+}
+
+
 module.exports = {
   install(Vue, options = {}) {
     if (!options.$store) {
       throw new Error("A valid store must be passed as a plugin option");
+    }
+
+    let emptyStateMethod = getEmptyStateMutationMethod(options);
+    if (emptyStateMethod !== null) {
+      VuexUndoRedoModule.mutations[EMPTY_STATE] = emptyStateMethod;
     }
 
     // Registering local module 
