@@ -1,3 +1,4 @@
+// bind this plugin on window
 const EMPTY_STATE = 'emptyState';
 
 module.exports = {
