@@ -47,41 +47,39 @@ module.exports = {
     // Registering local module 
     options.$store.registerModule('undoRedo', VuexUndoRedoModule);
 
+    // Adding a specific namespace to the $store object (accessible
+    // from any Component through this.$store)
+    options.$store.$undoRedo = {
+      done: [],
+      undone: [],
+      newMutation: true,
+      ignoreMutations: options.ignoreMutations || []
+    };
+
+    // Subscribing to every mutation in the store
+    options.$store.subscribe(mutation => {
+      if (mutation.type !== EMPTY_STATE && options.$store.$undoRedo.ignoreMutations.indexOf(mutation.type) === -1) {
+        options.$store.$undoRedo.done.push(mutation);
+      }
+      if (options.$store.$undoRedo.newMutation) {
+        options.$store.$undoRedo.undone = [];
+      }
+    });
+
+    // Adding computed & methods to any Vue Component
     Vue.mixin({
-      data() {
-        return {
-          $undoRedo: {
-            done: [],
-            undone: [],
-            newMutation: true,
-            ignoreMutations: options.ignoreMutations || []
-          }
-        };
-      },
-      created() {
-        if (this.$store) {
-          this.$store.subscribe(mutation => {
-            if (mutation.type !== EMPTY_STATE && this.$data.$undoRedo.ignoreMutations.indexOf(mutation.type) === -1) {
-              this.$data.$undoRedo.done.push(mutation);
-            }
-            if (this.$data.$undoRedo.newMutation) {
-              this.$data.$undoRedo.undone = [];
-            }
-          });
-        }
-      },
       computed: {
         canRedo() {
-          return this.$data.$undoRedo.undone.length;
+          return this.$store.$undoRedo.undone.length;
         },
         canUndo() {
-          return this.$data.$undoRedo.done.length;
+          return this.$store.$undoRedo.done.length;
         }
       },
       methods: {
         redo() {
-          let commit = this.$data.$undoRedo.undone.pop();
-          this.$data.$undoRedo.newMutation = false;
+          let commit = this.$store.$undoRedo.undone.pop();
+          this.$store.$undoRedo.newMutation = false;
           switch (typeof commit.payload) {
             case 'object':
               this.$store.commit(`${commit.type}`, Object.assign({}, commit.payload));
@@ -89,31 +87,31 @@ module.exports = {
             default:
               this.$store.commit(`${commit.type}`, commit.payload);
           }
-          this.$data.$undoRedo.newMutation = true;
+          this.$store.$undoRedo.newMutation = true;
         },
         undo(tagName) {
           if (tagName && typeof tagName === 'string') {
-            let candidatesMutations = this.$data.$undoRedo.done.filter(mutation => mutation.type === TAG_UNDO_MUTATION && mutation.payload === tagName);
+            let candidatesMutations = this.$store.$undoRedo.done.filter(mutation => mutation.type === TAG_UNDO_MUTATION && mutation.payload === tagName);
             let lastMutation = candidatesMutations.length ? candidatesMutations.pop() : null;
             if (lastMutation !== null) {
-              let mutationIdx = this.$data.$undoRedo.done.indexOf(lastMutation);
-              let len = this.$data.$undoRedo.done.length;
+              let mutationIdx = this.$store.$undoRedo.done.indexOf(lastMutation);
+              let len = this.$store.$undoRedo.done.length;
               for (let i = len - 1; i > mutationIdx; i--) {
-                this.$data.$undoRedo.undone.push(this.$data.$undoRedo.done.pop());
+                this.$store.$undoRedo.undone.push(this.$store.$undoRedo.done.pop());
               }
-              this.$data.$undoRedo.done.pop(); // Poppin' the TAGGED mutation 
+              this.$store.$undoRedo.done.pop(); // Poppin' the TAGGED mutation 
             } else if (process.env.NODE_ENV !== 'production') {
               console.warn(`TAG '${tagName}' not found in undo: ignoring...`);
               return;
             }
           } else {
-            this.$data.$undoRedo.undone.push(this.$data.$undoRedo.done.pop());
+            this.$store.$undoRedo.undone.push(this.$store.$undoRedo.done.pop());
           }
 
           // Replaying mutations
-          this.$data.$undoRedo.newMutation = false;
+          this.$store.$undoRedo.newMutation = false;
           this.$store.commit(EMPTY_STATE);
-          this.$data.$undoRedo.done.forEach(mutation => {
+          this.$store.$undoRedo.done.forEach(mutation => {
             switch (typeof mutation.payload) {
               case 'object':
                 this.$store.commit(`${mutation.type}`, Object.assign({}, mutation.payload));
@@ -121,9 +119,9 @@ module.exports = {
               default:
                 this.$store.commit(`${mutation.type}`, mutation.payload);
             }
-            this.$data.$undoRedo.done.pop();
+            this.$store.$undoRedo.done.pop();
           });
-          this.$data.$undoRedo.newMutation = true;
+          this.$store.$undoRedo.newMutation = true;
         }
       }
     });
