@@ -40,7 +40,9 @@ module.exports = {
           this.newMutation = false;
           switch (typeof commit.payload) {
             case 'object':
-              this.$store.commit(`${commit.type}`, Object.assign({}, commit.payload));
+              let baseObj = {};
+              if (mutation.payload instanceof Array) { baseObj = [] }
+              this.$store.commit(`${commit.type}`, Object.assign(baseObj, commit.payload));
               break;
             default:
               this.$store.commit(`${commit.type}`, commit.payload);
@@ -54,7 +56,9 @@ module.exports = {
           this.done.forEach(mutation => {
             switch (typeof mutation.payload) {
               case 'object':
-                this.$store.commit(`${mutation.type}`, Object.assign({}, mutation.payload));
+                let baseObj = {};
+                if (mutation.payload instanceof Array) { baseObj = [] }
+                this.$store.commit(`${mutation.type}`, Object.assign(baseObj, mutation.payload));
                 break;
               default:
                 this.$store.commit(`${mutation.type}`, mutation.payload);
